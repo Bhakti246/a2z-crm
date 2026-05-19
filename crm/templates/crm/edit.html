@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Lead</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="left-section">
+
+            <h1>Edit Lead</h1>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <input type="text" name="name" value="{{ lead.name }}" required>
+                <br><br>
+
+                <input type="text" name="phone" value="{{ lead.phone }}" required>
+                <br><br>
+
+                <input type="text" name="service" value="{{ lead.service }}" required>
+                <br><br>
+
+                <input type="text" name="budget" value="{{ lead.budget }}" required>
+                <br><br>
+
+                <textarea name="message" required>{{ lead.message }}</textarea>
+                <br><br>
+
+                <button type="submit">Update Lead</button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
