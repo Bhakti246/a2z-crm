@@ -1,0 +1,333 @@
+{% extends 'crm/base.html' %}
+{% load static %}
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="top-header">
+
+    <div>
+
+        <h1>CRM Dashboard</h1>
+
+        <p>
+            AI Lead Automation System
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     ANALYTICS CARDS
+========================= -->
+
+<div class="cards">
+
+    <div class="card">
+
+        <h3>Total Leads</h3>
+
+        <h1>{{ total_leads }}</h1>
+
+    </div>
+
+    <div class="card">
+
+        <h3>High Priority</h3>
+
+        <h1>{{ high_priority_count }}</h1>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Converted</h3>
+
+        <h1>{{ converted_count }}</h1>
+
+    </div>
+
+    <div class="card">
+
+        <h3>WhatsApp Sent</h3>
+
+        <h1>{{ whatsapp_sent_count }}</h1>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Email Sent</h3>
+
+        <h1>{{ email_sent_count }}</h1>
+
+    </div>
+
+    <div class="cards">
+
+    <div class="card">
+        <h3>Website Leads</h3>
+        <h1>{{ website_count }}</h1>
+    </div>
+
+    <div class="card">
+        <h3>Google Forms</h3>
+        <h1>{{ google_forms_count }}</h1>
+    </div>
+
+    <div class="card">
+        <h3>Instagram Leads</h3>
+        <h1>{{ instagram_count }}</h1>
+    </div>
+
+    <div class="card">
+        <h3>Manual Leads</h3>
+        <h1>{{ manual_count }}</h1>
+    </div>
+
+</div>
+
+<!-- =========================
+     SOURCE ANALYTICS
+========================= -->
+
+<div class="table-container" style="padding:30px; margin-bottom:30px;">
+
+    <h2 style="margin-bottom:20px;">
+        Lead Sources Analytics
+    </h2>
+
+    <canvas
+        id="sourceChart"
+        data-website="{{ website_count }}"
+        data-google="{{ google_forms_count }}"
+        data-instagram="{{ instagram_count }}"
+        data-manual="{{ manual_count }}"
+    ></canvas>
+
+</div>
+
+<!-- =========================
+     PRIORITY ANALYTICS
+========================= -->
+
+<div class="table-container" style="padding:30px; margin-bottom:30px;">
+
+    <h2 style="margin-bottom:20px;">
+        Lead Priority Analytics
+    </h2>
+
+    <canvas
+        id="leadChart"
+        data-high="{{ high_priority_count }}"
+        data-medium="{{ medium_priority_count }}"
+        data-low="{{ low_priority_count }}"
+    ></canvas>
+
+</div>
+
+
+<!-- =========================
+     SEARCH + FILTER
+========================= -->
+
+<div class="filter-box">
+
+    <form method="GET">
+
+        <div class="filter-row">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="Search Leads..."
+                value="{{ request.GET.search }}"
+            >
+
+            <select name="status">
+
+                <option value="">
+                    All Status
+                </option>
+
+                <option value="new">
+                    New
+                </option>
+
+                <option value="contacted">
+                    Contacted
+                </option>
+
+                <option value="closed">
+                    Closed
+                </option>
+
+            </select>
+
+            <button type="submit">
+
+                Filter
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- =========================
+     LEADS TABLE
+========================= -->
+
+<div class="table-container">
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Service</th>
+            <th>Budget</th>
+            <th>Source</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Actions</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% for lead in leads %}
+
+        <tr>
+
+            <td>{{ lead.name }}</td>
+
+            <td>{{ lead.phone }}</td>
+
+            <td>{{ lead.service }}</td>
+
+            <td>₹{{ lead.budget }}</td>
+
+            <td>{{ lead.source }}</td>
+
+            <td>
+
+                <span class="{{ lead.priority }}">
+
+                    {{ lead.priority }}
+
+                </span>
+
+            </td>
+
+            <td>
+
+                <span class="{{ lead.status }}">
+
+                    {{ lead.status }}
+
+                </span>
+
+            </td>
+
+            <td>
+
+                <a
+                    href="{% url 'lead_detail' lead.id %}"
+                    class="action-btn view-btn"
+                >
+                    View
+                </a>
+
+                <a
+                    href="{% url 'edit_lead' lead.id %}"
+                    class="action-btn edit-btn"
+                >
+                    Edit
+                </a>
+
+                <a
+                    href="{% url 'delete_lead' lead.id %}"
+                    class="action-btn delete-btn"
+                >
+                    Delete
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="8">
+
+                No leads found.
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- =========================
+     PAGINATION
+========================= -->
+
+<div class="pagination">
+
+    {% if leads.has_previous %}
+
+        <a href="?page={{ leads.previous_page_number }}">
+            Previous
+        </a>
+
+    {% endif %}
+
+    <span>
+
+        Page {{ leads.number }}
+        of
+        {{ leads.paginator.num_pages }}
+
+    </span>
+
+    {% if leads.has_next %}
+
+        <a href="?page={{ leads.next_page_number }}">
+            Next
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="{% static 'js/dashboard.js' %}"></script>
+
+{% endblock %}

@@ -1,42 +1,317 @@
-<!DOCTYPE html>
-<html>
+{% extends 'crm/base.html' %}
 
-<head>
-    <title>Edit Lead</title>
+{% block content %}
 
-    {% load static %}
+<div class="container">
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
+    <!-- PAGE HEADER -->
 
-<body>
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-    <div class="container">
+        <div>
 
-        <div class="left-section">
+            <h1 class="fw-bold">
+                Edit Lead
+            </h1>
 
-            <h1>Edit Lead</h1>
+            <p class="text-muted">
+                Update lead information
+            </p>
+
+        </div>
+
+        <a
+            href="/dashboard/"
+            class="btn btn-dark"
+        >
+            Back to Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- EDIT FORM -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
 
             <form method="POST">
 
                 {% csrf_token %}
 
-                <input type="text" name="name" value="{{ lead.name }}" required>
-                <br><br>
+                <div class="row">
 
-                <input type="text" name="phone" value="{{ lead.phone }}" required>
-                <br><br>
+                    <!-- NAME -->
 
-                <input type="text" name="service" value="{{ lead.service }}" required>
-                <br><br>
+                    <div class="col-md-6 mb-3">
 
-                <input type="text" name="budget" value="{{ lead.budget }}" required>
-                <br><br>
+                        <label class="form-label">
+                            Name
+                        </label>
 
-                <textarea name="message" required>{{ lead.message }}</textarea>
-                <br><br>
+                        <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            value="{{ lead.name }}"
+                            required
+                        >
 
-                <button type="submit">Update Lead</button>
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Phone
+                        </label>
+
+                        <input
+                            type="text"
+                            name="phone"
+                            class="form-control"
+                            value="{{ lead.phone }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- SERVICE -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Service
+                        </label>
+
+                        <select
+                            name="service"
+                            class="form-select"
+                        >
+
+                            <option value="website"
+                                {% if lead.service == 'website' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Website Development
+                            </option>
+
+                            <option value="app"
+                                {% if lead.service == 'app' %}
+                                    selected
+                                {% endif %}
+                            >
+                                App Development
+                            </option>
+
+                            <option value="crm"
+                                {% if lead.service == 'crm' %}
+                                    selected
+                                {% endif %}
+                            >
+                                CRM Software
+                            </option>
+
+                            <option value="seo"
+                                {% if lead.service == 'seo' %}
+                                    selected
+                                {% endif %}
+                            >
+                                SEO
+                            </option>
+
+                            <option value="marketing"
+                                {% if lead.service == 'marketing' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Digital Marketing
+                            </option>
+
+                            <option value="uiux"
+                                {% if lead.service == 'uiux' %}
+                                    selected
+                                {% endif %}
+                            >
+                                UI/UX Design
+                            </option>
+
+                            <option value="other"
+                                {% if lead.service == 'other' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- BUDGET -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Budget
+                        </label>
+
+                        <input
+                            type="number"
+                            name="budget"
+                            class="form-control"
+                            value="{{ lead.budget }}"
+                        >
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="new"
+                                {% if lead.status == 'new' %}
+                                    selected
+                                {% endif %}
+                            >
+                                New
+                            </option>
+
+                            <option value="contacted"
+                                {% if lead.status == 'contacted' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Contacted
+                            </option>
+
+                            <option value="qualified"
+                                {% if lead.status == 'qualified' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Qualified
+                            </option>
+
+                            <option value="proposal_sent"
+                                {% if lead.status == 'proposal_sent' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Proposal Sent
+                            </option>
+
+                            <option value="won"
+                                {% if lead.status == 'won' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Won
+                            </option>
+
+                            <option value="lost"
+                                {% if lead.status == 'lost' %}
+                                    selected
+                                {% endif %}
+                            >
+                                Lost
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ lead.email }}"
+                        >
+
+                    </div>
+
+
+                    <!-- COMPANY -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Company
+                        </label>
+
+                        <input
+                            type="text"
+                            name="company"
+                            class="form-control"
+                            value="{{ lead.company }}"
+                        >
+
+                    </div>
+
+
+                    <!-- MESSAGE -->
+
+                    <div class="col-12 mb-3">
+
+                        <label class="form-label">
+                            Message
+                        </label>
+
+                        <textarea
+                            name="message"
+                            rows="5"
+                            class="form-control"
+                        >{{ lead.message }}</textarea>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="d-flex gap-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Update Lead
+                    </button>
+
+                    <a
+                        href="/dashboard/"
+                        class="btn btn-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
 
             </form>
 
@@ -44,6 +319,6 @@
 
     </div>
 
-</body>
+</div>
 
-</html>
+{% endblock %}

@@ -1,0 +1,213 @@
+{% extends 'crm/base.html' %}
+
+{% block title %}
+Tasks
+{% endblock %}
+
+{% block content %}
+
+<div class="top-header">
+
+    <div>
+
+        <h1>Task Management</h1>
+
+        <p>
+            Manage sales follow-ups and customer tasks
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     TASK ANALYTICS
+========================= -->
+
+<div class="cards">
+
+    <div class="card">
+
+        <h3>Total Tasks</h3>
+
+        <h1>{{ tasks|length }}</h1>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Pending Tasks</h3>
+
+        <h1>{{ pending_tasks }}</h1>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Completed Tasks</h3>
+
+        <h1>{{ completed_tasks }}</h1>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Today's Tasks</h3>
+
+        <h1>{{ today_tasks }}</h1>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     TASK TABLE
+========================= -->
+
+<div class="table-container">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Lead Name</th>
+
+                <th>Task Type</th>
+
+                <th>Assigned To</th>
+
+                <th>Status</th>
+
+                <th>Due Time</th>
+
+                <th>Actions</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for task in tasks %}
+
+            <tr>
+
+                <td>
+                    {{ task.id }}
+                </td>
+
+                <td>
+                    {{ task.lead.name }}
+                </td>
+
+                <td>
+                    {{ task.task_type }}
+                </td>
+
+                <td>
+                    {{ task.assigned_to }}
+                </td>
+
+                <td>
+
+                    {% if task.status == "completed" %}
+
+                        <span style="color:green;font-weight:bold;">
+                            Completed
+                        </span>
+
+                    {% else %}
+
+                        <span style="color:red;font-weight:bold;">
+                            Pending
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+                    {{ task.due_time }}
+                </td>
+
+                <td>
+
+                    {% if task.status != "completed" %}
+
+                    <a
+                        href="{% url 'complete_task' task.id %}"
+                        class="action-btn view-btn complete-btn"
+                    >
+                        Complete
+                    </a>
+
+                    {% endif %}
+
+                    <a
+                        href="{% url 'delete_task' task.id %}"
+                        class="action-btn delete-btn"
+                    >
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="7">
+
+                    No Tasks Available
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- =========================
+     QUICK ACTIONS
+========================= -->
+
+<div
+    class="table-container"
+    style="margin-top:30px;padding:25px;"
+>
+
+    <h2 style="margin-bottom:20px;">
+        Quick Actions
+    </h2>
+
+    <a
+        href="/"
+        class="action-btn view-btn"
+    >
+        Add New Lead
+    </a>
+
+    <a
+        href="{% url 'dashboard' %}"
+        class="action-btn edit-btn"
+    >
+        Go To Dashboard
+    </a>
+
+</div>
+
+{% endblock %}
