@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    "surrogate-pelt-legged.ngrok-free.dev"
+    "a2z-crm-1.onrender.com",
 ]
 
 
