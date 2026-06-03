@@ -10,6 +10,7 @@ from .views import (
     tasks,
     complete_task,
     delete_task,
+    update_status
 )
 
 urlpatterns = [
@@ -31,4 +32,10 @@ urlpatterns = [
     path('tasks/delete/<int:id>/', delete_task, name='delete_task'),
 
     path('api/leads/', LeadCreateAPIView.as_view(), name='lead-create-api'),
+
+    path(
+    'update-status/<int:lead_id>/',
+    update_status,
+    name='update_status'
+),
 ]

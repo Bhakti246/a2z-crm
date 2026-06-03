@@ -43,6 +43,15 @@ def home(request):
         if request.POST.get('service'):
             score += 10
 
+        if score >= 70:
+            ai_remark = "Hot Lead"
+
+        elif score >= 40:
+            ai_remark = "Warm Lead"
+
+        else:
+            ai_remark = "Cold Lead"
+
         lead = Lead.objects.create(
         name=request.POST.get('name'),
         phone=request.POST.get('phone'),
@@ -51,7 +60,8 @@ def home(request):
         budget=request.POST.get('budget'),
         source=request.POST.get('source'),
         message=request.POST.get('message'),
-        ai_score=score
+        score=score,
+        ai_remark=ai_remark,
     )
 
         if int(lead.budget) >= 50000:
@@ -185,6 +195,16 @@ def dashboard(request):
 
     })
 
+    from django.shortcuts import redirect
+
+def update_status(request, lead_id):
+    lead = Lead.objects.get(id=lead_id)
+
+    if request.method == "POST":
+        lead.status = request.POST.get("status")
+        lead.save()
+
+    return redirect("dashboard")
 
 # ===========================
 # TASKS
@@ -234,7 +254,6 @@ def edit_lead(request, id):
         lead.name = request.POST.get('name')
         lead.phone = request.POST.get('phone')
         lead.email = request.POST.get('email')
-        lead.company = request.POST.get('company')
         lead.service = request.POST.get('service')
         lead.budget = request.POST.get('budget')
         lead.source = request.POST.get('source')
@@ -374,7 +393,7 @@ class LeadCreateAPIView(APIView):
                 lead=lead,
                 task_type="Call Lead",
                 assigned_to="Sales Team",
-                priority="high"
+                due_time=timezone.now(),
             )
 
             return Response({
@@ -412,12 +431,10 @@ def meta_webhook(request):
                 name="Facebook Lead",
                 phone="0000000000",
                 email="facebook@gmail.com",
-                company="Meta",
                 service="Meta Ads",
                 budget="10000",
                 source="facebook_ads",
                 message=str(data),
-                location="Unknown",
 
             )
 

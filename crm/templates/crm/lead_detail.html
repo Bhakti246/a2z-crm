@@ -110,11 +110,6 @@
         </div>
 
         <div class="info">
-            <span class="label">Company:</span>
-            {{ lead.company }}
-        </div>
-
-        <div class="info">
             <span class="label">Service:</span>
             {{ lead.service }}
         </div>
@@ -140,11 +135,6 @@
         </div>
 
         <div class="info">
-            <span class="label">Location:</span>
-            {{ lead.location }}
-        </div>
-
-        <div class="info">
             <span class="label">Message:</span>
             {{ lead.message }}
         </div>
@@ -160,7 +150,7 @@
 
     <h2>Update Status</h2>
 
-    <form method="POST">
+    <form method="POST" action="{% url 'update_status' lead.id %}">
 
         {% csrf_token %}
 
@@ -265,10 +255,7 @@
                     {{ task.status }}
                 </p>
 
-                <p>
-                    <strong>Priority:</strong>
-                    {{ task.priority }}
-                </p>
+                
 
             </div>
 

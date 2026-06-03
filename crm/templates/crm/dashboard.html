@@ -200,6 +200,8 @@ Dashboard
             <th>Source</th>
             <th>Priority</th>
             <th>Status</th>
+            <th>Score</th>
+            <th>AI Remark</th>
             <th>Actions</th>
 
         </tr>
@@ -233,14 +235,24 @@ Dashboard
             </td>
 
             <td>
+    <form method="POST" action="{% url 'update_status' lead.id %}">
+        {% csrf_token %}
 
-                <span class="{{ lead.status }}">
+        <select name="status">
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="qualified">Qualified</option>
+            <option value="converted">Converted</option>
+        </select>
 
-                    {{ lead.status }}
+        <button type="submit">
+            Update
+        </button>
+    </form>
+</td>
 
-                </span>
-
-            </td>
+            <td>{{ lead.score }}</td>
+            <td>{{ lead.ai_remark }}</td>
 
             <td>
 

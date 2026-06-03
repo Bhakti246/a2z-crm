@@ -74,7 +74,7 @@ class Lead(models.Model):
     score = models.IntegerField(default=0)
 
     ai_remark = models.CharField(
-    max_length=100,
+    max_length=200,
     blank=True,
     null=True
 )
