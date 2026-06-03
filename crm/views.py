@@ -195,8 +195,6 @@ def dashboard(request):
 
     })
 
-    from django.shortcuts import redirect
-
 def update_status(request, lead_id):
     lead = Lead.objects.get(id=lead_id)
 
