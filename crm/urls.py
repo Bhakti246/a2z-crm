@@ -36,6 +36,7 @@ urlpatterns = [
     path(
     'update-status/<int:lead_id>/',
     update_status,
-    name='update_status'
-),
+    name='update_status'),
+    
+    path('webhook/', views.meta_webhook, name='meta_webhook'),
 ]
