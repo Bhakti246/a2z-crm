@@ -11,6 +11,13 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import logging
+
+import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,17 +27,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s%b4x$x#uaw3zza-7^0)^h6jj-6!m5kg&!!8cn7fl(g2e*$9c-'
+def env_bool(name, default=False):
+    return os.environ.get(name, str(default)).lower() in {'1', 'true', 'yes', 'on'}
+
+
+def env_list(name, default=''):
+    return [item.strip() for item in os.environ.get(name, default).split(',') if item.strip()]
+
+
+def require_env(name):
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f'Missing required environment variable: {name}')
+    return value
+
+
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-s%b4x$x#uaw3zza-7^0)^h6jj-6!m5kg&!!8cn7fl(g2e*$9c-')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env_bool('DEBUG', True)
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "a2z-crm-1.onrender.com",
-]
-
+    os.environ.get('ALLOWED_HOST', 'localhost'),
+] + env_list('ALLOWED_HOSTS')
 
 # Application definition
 
@@ -44,6 +66,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'crm',
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,7 +84,7 @@ ROOT_URLCONF = 'myproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'template'],
+        'DIRS': [BASE_DIR / 'crm' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -84,6 +108,14 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES['default'] = dj_database_url.parse(
+        DATABASE_URL,
+        conn_max_age=int(os.environ.get('DB_CONN_MAX_AGE', '600')),
+        ssl_require=env_bool('DATABASE_SSL_REQUIRE', not DEBUG),
+    )
 
 
 # Password validation
@@ -121,7 +153,139 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Media files
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Django REST Framework Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+    'DEFAULT_FILTER_BACKENDS': [
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+}
+
+# Authentication URLs
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'
+
+# Security Settings for Production
+SECURE_SSL_REDIRECT = env_bool('SECURE_SSL_REDIRECT', not DEBUG)
+SESSION_COOKIE_SECURE = env_bool('SESSION_COOKIE_SECURE', not DEBUG)
+CSRF_COOKIE_SECURE = env_bool('CSRF_COOKIE_SECURE', not DEBUG)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '0' if DEBUG else '31536000'))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool('SECURE_HSTS_INCLUDE_SUBDOMAINS', not DEBUG)
+SECURE_HSTS_PRELOAD = env_bool('SECURE_HSTS_PRELOAD', False)
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = env_bool('CSRF_COOKIE_HTTPONLY', False)
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+
+# Logging
+class SensitiveDataFilter(logging.Filter):
+    sensitive_words = ('access_token', 'refresh_token', 'client_secret', 'password', 'authorization', 'signature')
+
+    def filter(self, record):
+        message = record.getMessage()
+        for word in self.sensitive_words:
+            message = message.replace(word, f'{word[:2]}***')
+            message = message.replace(word.upper(), f'{word[:2].upper()}***')
+        record.msg = message
+        record.args = ()
+        return True
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'sensitive_data': {
+            '()': 'myproject.settings.SensitiveDataFilter',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'crm.log',
+            'filters': ['sensitive_data'],
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'filters': ['sensitive_data'],
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'crm': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
+
+# CRM-specific settings
+# Meta/Facebook Integration
+META_OAUTH_CONFIG = {
+    'client_id': os.environ.get('META_CLIENT_ID', ''),
+    'client_secret': os.environ.get('META_CLIENT_SECRET', ''),
+    'redirect_uri': os.environ.get('META_REDIRECT_URI', 'http://localhost:8000/integrations/meta/callback/'),
+    'scopes': env_list(
+        'META_SCOPES',
+        'public_profile,pages_show_list,pages_read_engagement,pages_manage_metadata,leads_retrieval,instagram_basic,instagram_manage_messages,pages_messaging',
+    ),
+}
+META_GRAPH_API_VERSION = os.environ.get('META_GRAPH_API_VERSION', 'v24.0')
+META_API_BASE_URL = os.environ.get('META_API_BASE_URL', f'https://graph.facebook.com/{META_GRAPH_API_VERSION}')
+META_TOKEN_ENCRYPTION_KEY = os.environ.get('META_TOKEN_ENCRYPTION_KEY', '')
+
+# Google Integration
+GOOGLE_OAUTH_CONFIG = {
+    'client_id': os.environ.get('GOOGLE_CLIENT_ID', ''),
+    'client_secret': os.environ.get('GOOGLE_CLIENT_SECRET', ''),
+    'redirect_uri': os.environ.get('GOOGLE_REDIRECT_URI', 'http://localhost:8000/integrations/google/callback/'),
+    'scopes': ['https://www.googleapis.com/auth/forms.body.readonly'],
+}
+
+# Webhook security
+WEBHOOK_VERIFY_TOKEN = os.environ.get('WEBHOOK_VERIFY_TOKEN', 'a2zcrm123')
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', os.environ.get('REDIS_URL', 'redis://localhost:6379/0'))
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', CELERY_BROKER_URL)
+CELERY_TASK_ALWAYS_EAGER = env_bool('CELERY_TASK_ALWAYS_EAGER', DEBUG)
+CELERY_TASK_EAGER_PROPAGATES = env_bool('CELERY_TASK_EAGER_PROPAGATES', DEBUG)
+CELERY_TIMEZONE = TIME_ZONE
+
+SENTRY_DSN = os.environ.get('SENTRY_DSN', '')
+if SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=float(os.environ.get('SENTRY_TRACES_SAMPLE_RATE', '0.0')),
+        send_default_pii=False,
+    )

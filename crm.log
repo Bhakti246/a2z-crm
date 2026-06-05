@@ -1,0 +1,271 @@
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 7353
+"GET /tasks/ HTTP/1.1" 302 0
+"GET /login/?next=/tasks/ HTTP/1.1" 200 749
+Watching for file changes with StatReloader
+"POST /login/?next=/tasks/ HTTP/1.1" 302 0
+"GET /tasks/ HTTP/1.1" 200 2687
+"GET /static/css/dashboard.css HTTP/1.1" 200 4878
+"GET / HTTP/1.1" 200 7353
+"GET /tasks/ HTTP/1.1" 200 2687
+Internal Server Error: /dashboard/
+Traceback (most recent call last):
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+           ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'website'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\1. MCA\mca sem 4 project\project\a2z-crm\crm\views.py", line 159, in dashboard
+    website_count = Lead.objects.filter(
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1495, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1513, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1523, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1646, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1678, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1588, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1415, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\related_lookups.py", line 112, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'website'.
+"GET /dashboard/ HTTP/1.1" 500 136952
+E:\1. MCA\mca sem 4 project\project\a2z-crm\crm\views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /dashboard/
+Traceback (most recent call last):
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+           ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'website'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\1. MCA\mca sem 4 project\project\a2z-crm\crm\views.py", line 159, in dashboard
+    website_count = Lead.objects.filter(
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1495, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1513, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1523, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1646, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1678, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1588, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1415, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\related_lookups.py", line 112, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'website'.
+"GET /dashboard/ HTTP/1.1" 500 136795
+Internal Server Error: /dashboard/
+Traceback (most recent call last):
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+           ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'website'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\1. MCA\mca sem 4 project\project\a2z-crm\crm\views.py", line 159, in dashboard
+    website_count = Lead.objects.filter(
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1495, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1513, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1523, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1646, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1678, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1588, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1415, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\related_lookups.py", line 112, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'website'.
+"GET /dashboard/ HTTP/1.1" 500 136795
+Internal Server Error: /dashboard/
+Traceback (most recent call last):
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+           ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'website'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\1. MCA\mca sem 4 project\project\a2z-crm\crm\views.py", line 159, in dashboard
+    website_count = Lead.objects.filter(
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1495, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1513, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 1523, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1646, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1678, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1588, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\sql\query.py", line 1415, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\related_lookups.py", line 112, in get_prep_lookup
+    self.rhs = target_field.get_prep_value(self.rhs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+ValueError: Field 'id' expected a number but got 'website'.
+"GET /dashboard/ HTTP/1.1" 500 136795
+"GET / HTTP/1.1" 200 7353
+E:\1. MCA\mca sem 4 project\project\a2z-crm\crm\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\1. MCA\mca sem 4 project\project\a2z-crm\crm\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\1. MCA\mca sem 4 project\project\a2z-crm\crm\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\1. MCA\mca sem 4 project\project\a2z-crm\crm\views.py changed, reloading.
+Watching for file changes with StatReloader
+E:\1. MCA\mca sem 4 project\project\a2z-crm\crm\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 7353
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 6923
+"GET /tasks/ HTTP/1.1" 302 0
+"GET /login/?next=/tasks/ HTTP/1.1" 200 749
+"POST /login/?next=/tasks/ HTTP/1.1" 302 0
+"GET /tasks/ HTTP/1.1" 200 2778
+"GET /static/css/dashboard.css HTTP/1.1" 200 4878
+"GET / HTTP/1.1" 200 7353
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\1. MCA\mca sem 4 project\project\a2z-crm\crm\views.py", line 83, in home
+    Task.objects.create(
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\query.py", line 663, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\base.py", line 545, in __init__
+    _setattr(self, field.name, rel_obj)
+  File "C:\Users\KRUPAL\AppData\Local\Programs\Python\Python312\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 291, in __set__
+    raise ValueError(
+ValueError: Cannot assign "'Sales Team'": "Task.assigned_to" must be a "User" instance.
+"POST / HTTP/1.1" 500 93028

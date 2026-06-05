@@ -10,13 +10,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.utils import timezone
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
-import json
-
 from .forms import LeadForm
-from .models import Lead, LeadNote, Task
+from .integrations.utils import normalize_source_input
+from .integrations.web_scraper import create_scraped_leads
+from .models import ConnectedAccount, Lead, LeadNote, Task
 from .serializers import LeadSerializer
 
 
@@ -52,17 +49,21 @@ def home(request):
         else:
             ai_remark = "Cold Lead"
 
+        source_input = request.POST.get('source', 'website')
+        source_obj = normalize_source_input(source_input)
+
         lead = Lead.objects.create(
-        name=request.POST.get('name'),
-        phone=request.POST.get('phone'),
-        email=request.POST.get('email'),
-        service=request.POST.get('service'),
-        budget=request.POST.get('budget'),
-        source=request.POST.get('source'),
-        message=request.POST.get('message'),
-        score=score,
-        ai_remark=ai_remark,
-    )
+            name=request.POST.get('name'),
+            phone=request.POST.get('phone'),
+            email=request.POST.get('email'),
+            service=request.POST.get('service'),
+            budget=request.POST.get('budget'),
+            source=source_obj,
+            source_legacy=source_input,
+            message=request.POST.get('message'),
+            score=score,
+            ai_remark=ai_remark,
+        )
 
         if int(lead.budget) >= 50000:
             lead.priority = 'high'
@@ -170,16 +171,31 @@ def dashboard(request):
     ).count()
 
     instagram_count = Lead.objects.filter(
-    source='instagram_dms'
+        source='instagram_dms'
     ).count()
 
     manual_count = Lead.objects.filter(
-    source='manual'
+        source='manual'
     ).count()
 
+    scrape_error = None
+    scraped_count = 0
+    if request.method == 'POST' and request.POST.get('scrape_url'):
+        scrape_url = request.POST.get('scrape_url', '').strip()
+        try:
+            created_leads = create_scraped_leads(scrape_url, user=request.user)
+            scraped_count = len(created_leads)
+        except Exception as exc:
+            scrape_error = str(exc)
+
+    connected_accounts = ConnectedAccount.objects.filter(
+        user=request.user,
+        status='active'
+    )
+    instagram_connections = connected_accounts.filter(account_type='instagram').count()
+    facebook_connections = connected_accounts.filter(account_type='facebook').count()
 
     return render(request, 'crm/dashboard.html', {
-
         'leads': leads,
         'total_leads': total_leads,
         'high_priority_count': high_priority_count,
@@ -192,7 +208,11 @@ def dashboard(request):
         'google_forms_count': google_forms_count,
         'instagram_count': instagram_count,
         'manual_count': manual_count,
-
+        'connected_accounts': connected_accounts,
+        'instagram_connections': instagram_connections,
+        'facebook_connections': facebook_connections,
+        'scraped_count': scraped_count,
+        'scrape_error': scrape_error,
     })
 
 def update_status(request, lead_id):
@@ -377,10 +397,14 @@ class LeadCreateAPIView(APIView):
 
     def post(self, request, *args, **kwargs):
 
-        print("========== API HIT ==========")
-        print(request.data)
+        source_input = request.data.get('source') or request.data.get('source_legacy') or 'manual'
+        source_obj = normalize_source_input(source_input, request.data.get('source_legacy'))
 
-        serializer = LeadSerializer(data=request.data)
+        data = request.data.copy() if hasattr(request.data, 'copy') else dict(request.data)
+        data['source'] = source_obj.id
+        data.setdefault('source_legacy', source_input)
+
+        serializer = LeadSerializer(data=data)
 
         if serializer.is_valid():
 
@@ -408,55 +432,3 @@ class LeadCreateAPIView(APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ==============================
-# META / FACEBOOK WEBHOOK
-# ==============================
-
-from django.http import HttpResponse, JsonResponse
-import json
-
-@csrf_exempt
-def meta_webhook(request):
-
-    # META VERIFICATION
-    if request.method == "GET":
-        mode = request.GET.get("hub.mode")
-        token = request.GET.get("hub.verify_token")
-        challenge = request.GET.get("hub.challenge")
-
-        if mode == "subscribe" and token == "a2zcrm123":
-            return HttpResponse(challenge)
-
-        return HttpResponse("Verification failed", status=403)
-
-    # META LEAD DATA
-    if request.method == "POST":
-
-        data = json.loads(request.body)
-
-        print("========== META WEBHOOK ==========")
-        print(data)
-
-        try:
-            Lead.objects.create(
-                name="Facebook Lead",
-                phone="0000000000",
-                email="facebook@gmail.com",
-                service="Meta Ads",
-                budget="10000",
-                source="facebook_ads",
-                message=str(data),
-            )
-
-            return JsonResponse({
-                "status": "success"
-            })
-
-        except Exception as e:
-            return JsonResponse({
-                "error": str(e)
-            })
-
-    return JsonResponse({
-        "message": "Webhook Working"
-    })

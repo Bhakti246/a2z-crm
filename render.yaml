@@ -1,0 +1,120 @@
+services:
+  - type: web
+    name: a2z-crm
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: myproject.settings_production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOST
+        value: a2z-crm-1.onrender.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: a2z-crm-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: a2z-crm-redis
+          type: redis
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: a2z-crm-redis
+          type: redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          name: a2z-crm-redis
+          type: redis
+          property: connectionString
+      - key: META_GRAPH_API_VERSION
+        value: v24.0
+      - key: SECURE_SSL_REDIRECT
+        value: "True"
+      - key: SESSION_COOKIE_SECURE
+        value: "True"
+      - key: CSRF_COOKIE_SECURE
+        value: "True"
+
+  - type: worker
+    name: a2z-crm-celery
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    startCommand: celery -A myproject worker --loglevel=INFO
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: myproject.settings_production
+      - key: SECRET_KEY
+        sync: false
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOST
+        value: a2z-crm-1.onrender.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: a2z-crm-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: a2z-crm-redis
+          type: redis
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: a2z-crm-redis
+          type: redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          name: a2z-crm-redis
+          type: redis
+          property: connectionString
+
+  - type: worker
+    name: a2z-crm-celery-beat
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    startCommand: celery -A myproject beat --loglevel=INFO
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: myproject.settings_production
+      - key: SECRET_KEY
+        sync: false
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOST
+        value: a2z-crm-1.onrender.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: a2z-crm-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: a2z-crm-redis
+          type: redis
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          name: a2z-crm-redis
+          type: redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          name: a2z-crm-redis
+          type: redis
+          property: connectionString
+
+databases:
+  - name: a2z-crm-db
+    plan: starter
+
+redis:
+  - name: a2z-crm-redis
+    plan: starter

@@ -18,7 +18,49 @@ Dashboard
 
     </div>
 
-</div>
+    <div class="integration-card">
+        <h3>Instagram / Meta Integration</h3>
+        {% if instagram_connections or facebook_connections %}
+            <p>
+                Connected accounts: {{ instagram_connections }} Instagram, {{ facebook_connections }} Facebook
+            </p>
+            <a href="{% url 'connect_meta_account' %}" class="button secondary">
+                Refresh Connection
+            </a>
+        {% else %}
+            <p>
+                Connect your Instagram business account and Facebook Page to ingest leads and messages directly.
+            </p>
+            <a href="{% url 'connect_meta_account' %}" class="button primary">
+                Connect Instagram / Facebook
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="integration-card">
+        <h3>Scrape Leads from the Web</h3>
+        <p>
+            Enter a public URL and the system will scan for contact data to create leads automatically.
+        </p>
+        <form method="POST" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            {% csrf_token %}
+            <input
+                type="url"
+                name="scrape_url"
+                placeholder="https://example.com/contact"
+                required
+                style="flex:1; padding:8px;"
+            >
+            <button type="submit" class="button primary" style="padding:8px 16px;">
+                Scrape Leads
+            </button>
+        </form>
+        {% if scrape_error %}
+            <p style="color:#c0392b; margin-top:10px;">Error: {{ scrape_error }}</p>
+        {% elif scraped_count %}
+            <p style="color:#27ae60; margin-top:10px;">Created {{ scraped_count }} scraped lead{{ scraped_count|pluralize }}.</p>
+        {% endif %}
+    </div>
 
 
 <!-- =========================

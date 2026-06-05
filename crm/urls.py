@@ -11,7 +11,13 @@ from .views import (
     complete_task,
     delete_task,
     update_status,
-    meta_webhook
+)
+from .views_meta import (
+    meta_callback,
+    meta_connect,
+    meta_data_deletion,
+    meta_webhook,
+    send_meta_message,
 )
 
 urlpatterns = [
@@ -40,4 +46,9 @@ urlpatterns = [
     name='update_status'),
 
     path('webhook/', meta_webhook, name='meta_webhook'),
+    path('webhook/meta/', meta_webhook, name='meta_webhook_named'),
+    path('integrations/meta/connect/', meta_connect, name='connect_meta_account'),
+    path('integrations/meta/callback/', meta_callback, name='meta_callback'),
+    path('integrations/meta/messages/send/', send_meta_message, name='send_meta_message'),
+    path('privacy/meta/data-deletion/', meta_data_deletion, name='meta_data_deletion'),
 ]
