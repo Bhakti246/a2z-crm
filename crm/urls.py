@@ -10,7 +10,8 @@ from .views import (
     tasks,
     complete_task,
     delete_task,
-    update_status
+    update_status,
+    meta_webhook
 )
 
 urlpatterns = [
@@ -37,6 +38,6 @@ urlpatterns = [
     'update-status/<int:lead_id>/',
     update_status,
     name='update_status'),
-    
-    path('webhook/', views.meta_webhook, name='meta_webhook'),
+
+    path('webhook/', meta_webhook, name='meta_webhook'),
 ]
