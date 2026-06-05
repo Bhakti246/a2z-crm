@@ -412,9 +412,24 @@ class LeadCreateAPIView(APIView):
 # META / FACEBOOK WEBHOOK
 # ==============================
 
+from django.http import HttpResponse, JsonResponse
+import json
+
 @csrf_exempt
 def meta_webhook(request):
 
+    # META VERIFICATION
+    if request.method == "GET":
+        mode = request.GET.get("hub.mode")
+        token = request.GET.get("hub.verify_token")
+        challenge = request.GET.get("hub.challenge")
+
+        if mode == "subscribe" and token == "a2zcrm123":
+            return HttpResponse(challenge)
+
+        return HttpResponse("Verification failed", status=403)
+
+    # META LEAD DATA
     if request.method == "POST":
 
         data = json.loads(request.body)
@@ -423,9 +438,7 @@ def meta_webhook(request):
         print(data)
 
         try:
-
             Lead.objects.create(
-
                 name="Facebook Lead",
                 phone="0000000000",
                 email="facebook@gmail.com",
@@ -433,7 +446,6 @@ def meta_webhook(request):
                 budget="10000",
                 source="facebook_ads",
                 message=str(data),
-
             )
 
             return JsonResponse({
@@ -441,7 +453,6 @@ def meta_webhook(request):
             })
 
         except Exception as e:
-
             return JsonResponse({
                 "error": str(e)
             })
